@@ -1,0 +1,161 @@
+{
+  "10": {
+    "model": "SL1210",
+    "brand": "Shenzhen FengWo",
+    "type": "Pico PV System",
+    "pv_watts": 10,
+    "battery": {
+      "voltage": 11.1,
+      "capacity_ah": 10,
+      "capacity_wh": 111,
+      "chemistry": "Li-ion"
+    },
+    "lights": {
+      "count": 4,
+      "lumens": 680,
+      "runtime_hours": 13
+    },
+    "ports": {
+      "usb": 2,
+      "barrel_jack": 3
+    },
+    "features": [
+      "Phone charging",
+      "Radio support",
+      "4 LED lights",
+      "Plug-and-play"
+    ],
+    "daily_energy_available": 35,
+    "warranty_months": 12,
+    "verasol_certified": true
+  },
+  "20": {
+    "model": "SSLS-V1.3",
+    "brand": "Quality Charge",
+    "type": "Pico PV System",
+    "pv_watts": 20,
+    "battery": {
+      "voltage": 11.1,
+      "capacity_ah": 13,
+      "capacity_wh": 144,
+      "chemistry": "Li-ion"
+    },
+    "lights": {
+      "count": 4,
+      "lumens": 800,
+      "runtime_hours": 16
+    },
+    "ports": {
+      "usb": 2,
+      "barrel_jack": 4
+    },
+    "features": [
+      "Phone charging",
+      "Radio support",
+      "4 LED lights",
+      "USB charging ports"
+    ],
+    "daily_energy_available": 65,
+    "warranty_months": 24,
+    "verasol_certified": true
+  },
+  "50": {
+    "model": "SR16 Ed.5-V.1",
+    "brand": "Sun King",
+    "type": "Solar Home System Kit",
+    "pv_watts": 50,
+    "battery": {
+      "voltage": 11.1,
+      "capacity_ah": 34,
+      "capacity_wh": 377,
+      "chemistry": "LiFePO4"
+    },
+    "lights": {
+      "count": 4,
+      "lumens": 1600,
+      "runtime_hours": 24
+    },
+    "ports": {
+      "usb": 3,
+      "barrel_jack": 4,
+      "dc": 1
+    },
+    "features": [
+      "Phone charging",
+      "Radio support",
+      "TV compatible",
+      "Fan compatible",
+      "Multiple light points"
+    ],
+    "daily_energy_available": 180,
+    "warranty_months": 24,
+    "verasol_certified": true
+  },
+  "100": {
+    "model": "SHS-100",
+    "brand": "Generic SHS",
+    "type": "Solar Home System Kit",
+    "pv_watts": 100,
+    "battery": {
+      "voltage": 12,
+      "capacity_ah": 50,
+      "capacity_wh": 600,
+      "chemistry": "LiFePO4"
+    },
+    "lights": {
+      "count": 6,
+      "lumens": 2400,
+      "runtime_hours": 30
+    },
+    "ports": {
+      "usb": 4,
+      "dc": 2
+    },
+    "features": [
+      "Phone charging",
+      "Radio support",
+      "TV compatible (32\")",
+      "Fan compatible",
+      "Laptop charging",
+      "Multiple appliances"
+    ],
+    "daily_energy_available": 350,
+    "warranty_months": 24,
+    "verasol_certified": false
+  },
+  "200": {
+    "model": "SHS-200",
+    "brand": "Generic SHS",
+    "type": "Solar Home System Kit",
+    "pv_watts": 200,
+    "battery": {
+      "voltage": 12,
+      "capacity_ah": 100,
+      "capacity_wh": 1200,
+      "chemistry": "LiFePO4"
+    },
+    "lights": {
+      "count": 8,
+      "lumens": 3200,
+      "runtime_hours": 40
+    },
+    "ports": {
+      "usb": 6,
+      "dc": 3,
+      "ac": 1
+    },
+    "features": [
+      "Phone charging",
+      "Radio support",
+      "TV compatible (42\")",
+      "Fan compatible",
+      "Laptop charging",
+      "WiFi router",
+      "Small appliances",
+      "AC inverter output"
+    ],
+    "daily_energy_available": 700,
+    "warranty_months": 24,
+    "verasol_certified": false
+  }
+}

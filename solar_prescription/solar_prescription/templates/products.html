@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VeraSol Certified Products - Solar Prescription</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>✓ VeraSol Certified Solar Products</h1>
+        <p>Browse certified solar home system kits by wattage</p>
+        <a href="/" class="back-link">← Back to Prescription</a>
+      </header>
+
+      <main>
+        {% if not watts %}
+        <div class="watts-input-section">
+          <h2>Enter Wattage</h2>
+          <form method="GET" action="/products">
+            <div class="form-group">
+              <label for="watts">Solar Kit Wattage (W):</label>
+              <input
+                type="number"
+                id="watts"
+                name="watts"
+                min="1"
+                required
+                placeholder="e.g., 50"
+              />
+            </div>
+            <button type="submit" class="btn-primary">Browse Products</button>
+          </form>
+        </div>
+        {% else %}
+        <div class="products-section">
+          <h2>{{ watts }}W Certified Products</h2>
+          {% if products %}
+          <p>
+            Found {{ products|length }} certified product{{ 's' if
+            products|length != 1 else '' }}
+          </p>
+
+          <div class="products-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Brand</th>
+                  <th>Product Name</th>
+                  <th>Model Number</th>
+                  <th>PV Power (W)</th>
+                  <th>Light Points</th>
+                  <th>Battery Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                <tr>
+                  <td>{{ product['Brand'] }}</td>
+                  <td>{{ product['Product Name'] }}</td>
+                  <td>{{ product['Model Number'] }}</td>
+                  <td>{{ product['PV Module Maximum Power [W]'] }}</td>
+                  <td>{{ product['Number of Light Points'] }}</td>
+                  <td>{{ product['Main Unit Battery Chemistry'] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="note">
+            <p>
+              <strong>Note:</strong> These products are VeraSol certified.
+              Contact your local solar provider for pricing and availability, or
+              search online for more details.
+            </p>
+          </div>
+          {% else %}
+          <p>No {{ watts }}W products found in the database.</p>
+          {% endif %}
+
+          <div class="try-again">
+            <a href="/products" class="btn-secondary">Try Different Wattage</a>
+          </div>
+        </div>
+        {% endif %} {% if error %}
+        <div class="error">
+          <p>Error: {{ error }}</p>
+        </div>
+        {% endif %}
+      </main>
+    </div>
+  </body>
+</html>

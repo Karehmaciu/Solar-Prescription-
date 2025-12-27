@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Solar Prescription</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="prescription-header">
+        <h1>Your Solar Prescription</h1>
+        <div class="prescription-meta">
+          <span>📍 {{ location }}</span>
+          <span>•</span>
+          <span>{{ prescription.kit_size }}W Kit</span>
+        </div>
+      </div>
+
+      <!-- Main Verdict Card -->
+      <div
+        class="verdict-card verdict-{{ prescription.recommendation.status }}"
+      >
+        <div class="verdict-icon">
+          {% if prescription.recommendation.status == 'approved' %} ✓ {% elif
+          prescription.recommendation.status == 'warning' %} ⚠ {% else %} ✗ {%
+          endif %}
+        </div>
+        <h2 class="verdict-title">{{ prescription.recommendation.title }}</h2>
+        <p class="verdict-message">{{ prescription.recommendation.message }}</p>
+
+        {% if prescription.recommendation.suggestion %}
+        <div class="verdict-suggestion">
+          <strong>Our Recommendation:</strong>
+          {% if suggestion_watts %} {{ suggestion_prefix }}
+          <a
+            class="recommendation-link"
+            href="/products?watts={{ suggestion_watts }}"
+            >{{ suggestion_watts_text }}</a
+          >
+          {{ suggestion_suffix }} {% else %} {{
+          prescription.recommendation.suggestion }} {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Warnings (if any) -->
+      {% if prescription.recommendation.warnings %}
+      <div class="warnings-section">
+        <h3>⚠️ Important Warnings</h3>
+        <ul class="warnings-list">
+          {% for warning in prescription.recommendation.warnings %}
+          <li>{{ warning }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <!-- Coverage Explanation -->
+      <div class="coverage-explanation-card">
+        <h3>📊 {{ coverage_info.title }}</h3>
+        <p class="coverage-description">{{ coverage_info.description }}</p>
+        <div class="coverage-recommendation">
+          <strong>Recommendation:</strong> {{ coverage_info.recommendation }}
+        </div>
+      </div>
+
+      <!-- Out of Certified Range Warning -->
+      {% if is_outside_certified_range %}
+      <div class="certified-warning-card">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-content">
+          <h3>Kit Outside Certified Range</h3>
+          <p>
+            The recommended {{ browse_watts }}W kit exceeds our certified
+            products database (max {{ max_certified_watts }}W).
+          </p>
+          <p class="warning-note">
+            This kit is based on calculations but hasn't been independently
+            tested and certified by VeraSol. Please verify specifications with
+            the manufacturer.
+          </p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Irradiance Warnings -->
+      {% if prescription.irradiance_warnings %}
+      <div class="irradiance-warnings">
+        <h3>📍 Location-Specific Considerations</h3>
+        {% for warning in prescription.irradiance_warnings %}
+        <div class="warning-item warning-{{ warning.level }}">
+          {{ warning.message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Detailed Numbers -->
+      <div class="details-grid">
+        <!-- Product Info (if available) -->
+        {% if prescription.product_info %}
+        <div class="detail-card product-card">
+          <h3>📦 Product: {{ prescription.product_info.model }}</h3>
+          <div class="product-details">
+            <div class="product-field">
+              <strong>Brand:</strong> {{ prescription.product_info.brand }}
+            </div>
+            <div class="product-field">
+              <strong>Type:</strong> {{ prescription.product_info.type }}
+            </div>
+            <div class="product-field">
+              <strong>PV Module:</strong> {{ prescription.product_info.pv_watts
+              }}W
+            </div>
+            <div class="product-field">
+              <strong>Battery:</strong> {{ prescription.product_info.battery }}
+            </div>
+            <div class="product-field">
+              <strong>Lights:</strong> {{ prescription.product_info.lights }}
+            </div>
+            <div class="product-field">
+              <strong>Runtime:</strong> {{ prescription.product_info.runtime }}
+            </div>
+            <div class="product-field">
+              <strong>Ports:</strong> {{ prescription.product_info.ports }}
+            </div>
+            <div class="product-field">
+              <strong>Features:</strong> {{
+              prescription.product_info.features|join(', ') }}
+            </div>
+            <div class="product-field">
+              <strong>Warranty:</strong> {{ prescription.product_info.warranty
+              }}
+            </div>
+            <div
+              class="product-note {% if prescription.product_info.verasol_certified %}certified{% endif %}"
+            >
+              {% if prescription.product_info.verasol_certified %} ✓ VeraSol
+              Certified {% else %} ℹ️ Generic Specification {% endif %} | Tested
+              Daily Energy: {{ prescription.product_info.tested_daily_energy
+              }}Wh/day
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Browse Certified Products -->
+        <div class="detail-card browse-products-card">
+          <h3>🛒 Browse Certified Products</h3>
+          <p>
+            Looking for other {{ browse_watts }}W options? Check out all VeraSol
+            certified solar home system kits.
+          </p>
+          {% if browse_is_fallback %}
+          <p class="browse-caution">Review your loads with caution.</p>
+          {% endif %}
+          <a href="/products?watts={{ browse_watts }}" class="btn-primary"
+            >Browse {{ browse_watts }}W Products</a
+          >
+        </div>
+
+        <div class="detail-card">
+          <h3>Your Daily Energy Need</h3>
+          <div class="big-number">
+            {{ prescription.energy_need.daily_wh|int }} Wh
+          </div>
+          <div class="detail-breakdown">
+            {% for app in prescription.energy_need.appliances %}
+            <div class="breakdown-item">
+              <span>{{ app.name }} (×{{ app.quantity }})</span>
+              <span>{{ app.daily_wh|int }} Wh</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h3>Kit Production in {{ location }}</h3>
+          <div class="big-number">
+            {{ prescription.production.daily_avg|int }} Wh/day
+          </div>
+          {% if prescription.production.using_tested_value %}
+          <p class="production-note">
+            <small
+              ><strong>⚠ Real-world tested value</strong> - Theoretical solar
+              calculation showed {{ prescription.production.theoretical_avg|int
+              }} Wh/day, but using actual tested performance instead.</small
+            >
+          </p>
+          {% endif %}
+          <div class="production-range">
+            <div class="range-item">
+              <span class="range-label">Best Month:</span>
+              <span class="range-value"
+                >{{ prescription.production.best_month|int }} Wh/day</span
+              >
+            </div>
+            <div class="range-item">
+              <span class="range-label">Worst Month:</span>
+              <span class="range-value"
+                >{{ prescription.production.worst_month|int }} Wh/day</span
+              >
+            </div>
+            <div class="range-item">
+              <span class="range-label">Annual Total:</span>
+              <span class="range-value"
+                >{{ prescription.production.annual_kwh|int }} kWh</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h3>Coverage Analysis</h3>
+          <div class="coverage-bars">
+            <div class="coverage-bar-item">
+              <label>Average Month</label>
+              <div class="progress-bar">
+                <div
+                  class="progress-fill coverage-avg"
+                  style="width: {{ [prescription.verdict.avg_coverage, 100]|min }}%"
+                ></div>
+              </div>
+              <span class="percentage"
+                >{{ prescription.verdict.avg_coverage }}%</span
+              >
+            </div>
+            <div class="coverage-bar-item">
+              <label>Worst Month</label>
+              <div class="progress-bar">
+                <div
+                  class="progress-fill coverage-worst"
+                  style="width: {{ [prescription.verdict.worst_coverage, 100]|min }}%"
+                ></div>
+              </div>
+              <span class="percentage"
+                >{{ prescription.verdict.worst_coverage }}%</span
+              >
+            </div>
+          </div>
+          <p class="coverage-note">
+            <small
+              >After accounting for 20% system losses (battery, inverter,
+              wiring)</small
+            >
+          </p>
+        </div>
+      </div>
+
+      <!-- Understanding Your Prescription -->
+      <div class="understanding-section">
+        <h3>Understanding Your Prescription</h3>
+        <div class="understanding-grid">
+          <div class="understand-card">
+            <h4>What We Calculated</h4>
+            <ul>
+              <li>Used real solar data for <strong>{{ location }}</strong></li>
+              <li>Accounted for 20% system losses</li>
+              <li>Analyzed seasonal variation</li>
+              <li>Compared your needs vs. production</li>
+            </ul>
+          </div>
+
+          <div class="understand-card">
+            <h4>What This Means</h4>
+            <ul>
+              {% if prescription.recommendation.status == 'approved' %}
+              <li>Kit produces enough for your daily needs</li>
+              <li>You can reliably use selected appliances</li>
+              <li>System should perform as expected</li>
+              {% elif prescription.recommendation.status == 'warning' %}
+              <li>Kit meets needs most months</li>
+              <li>Expect shortages in low-sun months</li>
+              <li>Consider reducing usage seasonally</li>
+              {% else %}
+              <li>Kit cannot meet your energy needs</li>
+              <li>You'll face daily power shortages</li>
+              <li>Battery will discharge completely</li>
+              <li>A larger kit is essential</li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <a href="/" class="btn-secondary"> ← Try Different Kit Size </a>
+        <button onclick="window.print()" class="btn-primary">
+          🖨️ Print This Prescription
+        </button>
+        <button onclick="shareResults()" class="btn-primary">
+          📤 Share Results
+        </button>
+      </div>
+
+      <!-- Prescription Summary -->
+      <div class="edu-note">
+        <h4>📋 Prescription Summary</h4>
+        <p>
+          This analysis uses real-world solar irradiance data from NASA
+          satellites to calculate your kit's expected performance at your
+          specific location. The {{ prescription.kit_size }}W kit recommendation
+          is based on your {{ coverage_info.title.split(' - ')[0] }} choice,
+          providing {{ coverage_info.description.split('.')[0] }}.
+        </p>
+        <p>
+          <strong>Key Findings:</strong> Your selected appliances require {{
+          prescription.energy_need.daily_wh }} Wh/day. The recommended kit will
+          produce an average of {{ prescription.production.daily_avg }} Wh/day,
+          with {{ prescription.production.worst_month }} Wh/day in the worst
+          month. This results in {{ prescription.verdict.avg_coverage }}%
+          average coverage and {{ prescription.verdict.worst_coverage }}%
+          worst-month coverage.
+        </p>
+        {% if prescription.recommendation.status == 'approved' %}
+        <p>
+          <strong>Professional Assessment:</strong> The kit is appropriately
+          sized for your energy requirements and location. You can expect
+          reliable performance year-round within the parameters of your chosen
+          coverage level.
+        </p>
+        {% elif prescription.recommendation.status == 'warning' %}
+        <p>
+          <strong>Professional Assessment:</strong> The kit will meet your needs
+          most of the year, but expect reduced availability during low-solar
+          months. Plan to manage loads accordingly or consider upgrading to a
+          larger system.
+        </p>
+        {% else %}
+        <p>
+          <strong>Professional Assessment:</strong> The kit is undersized for
+          your energy requirements. We strongly recommend selecting a larger
+          capacity system to avoid daily power shortages and battery damage.
+        </p>
+        {% endif %}
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          <strong>Solar Prescription Tool</strong> - Developed by kamisoftware
+          dev
+        </p>
+        <p class="footer-note">
+          Using NASA satellite data via NREL to show real-world solar
+          performance at your location. Consumer protection through
+          transparency.
+        </p>
+        <p class="footer-note">
+          Data accuracy: ±10% annually (NREL PVWatts validation). Actual
+          performance may vary based on installation quality, shading, and
+          maintenance.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      function shareResults() {
+        const text = `I just got my Solar Prescription! ${
+          document.querySelector(".verdict-title").textContent
+        }`;
+
+        if (navigator.share) {
+          navigator.share({
+            title: "My Solar Prescription",
+            text: text,
+            url: window.location.href,
+          });
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(text + "\n" + window.location.href);
+          alert("Results link copied to clipboard!");
+        }
+      }
+    </script>
+  </body>
+</html>

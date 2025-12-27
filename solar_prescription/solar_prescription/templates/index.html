@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Solar Prescription - Get the Right Solar Kit for Your Location
+    </title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            <span class="emoji">☀️</span>
+            Solar Prescription
+          </h1>
+          <p class="hero-subtitle">
+            Just like medicine, solar kits should be prescribed based on where
+            you live.
+            <br />Get the right kit for your location - not a one-size-fits-all
+            solution.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="prescription-form-container">
+        <div class="form-header">
+          <h2>Get Your Solar Prescription</h2>
+          <p>
+            Answer three simple questions to find out if a solar kit will work
+            for you
+          </p>
+        </div>
+
+        <form id="prescriptionForm">
+          <!-- Step 1: Location -->
+          <div class="form-section">
+            <div class="section-number">1</div>
+            <div class="section-content">
+              <label class="section-label">Where are you located?</label>
+              <p class="section-help">
+                Solar production varies dramatically by location
+              </p>
+
+              <div class="location-input-group">
+                <input
+                  type="text"
+                  id="locationSearch"
+                  class="form-input"
+                  placeholder="Enter your city (e.g., Nairobi, Lagos, Kampala)"
+                  required
+                />
+                <div
+                  id="locationSuggestions"
+                  class="location-suggestions"
+                ></div>
+              </div>
+
+              <div class="coordinates-display" id="coordinatesDisplay">
+                <span class="coord-label">Coordinates:</span>
+                <span id="coordsText"></span>
+              </div>
+
+              <input type="hidden" id="latitude" name="latitude" />
+              <input type="hidden" id="longitude" name="longitude" />
+              <input type="hidden" id="locationName" name="location" />
+            </div>
+          </div>
+
+          <!-- Step 2: Coverage Selection -->
+          <div class="form-section">
+            <div class="section-number">2</div>
+            <div class="section-content">
+              <label class="section-label"
+                >What yearly coverage do you want?</label
+              >
+              <p class="section-help">
+                Choose based on your budget and reliability needs
+              </p>
+
+              <div class="coverage-options">
+                <label class="coverage-option">
+                  <input type="radio" name="coverage" value="50" />
+                  <div class="coverage-card">
+                    <div class="coverage-percent">50%</div>
+                    <div class="coverage-desc">Budget Option</div>
+                    <div class="coverage-details">
+                      Reliable for 6 months/year<br />
+                      Lower cost, expect outages
+                    </div>
+                  </div>
+                </label>
+
+                <label class="coverage-option">
+                  <input type="radio" name="coverage" value="70" checked />
+                  <div class="coverage-card">
+                    <div class="coverage-percent">70%</div>
+                    <div class="coverage-desc">Balanced Choice</div>
+                    <div class="coverage-details">
+                      Reliable most of the year<br />
+                      Good value for money
+                    </div>
+                  </div>
+                </label>
+
+                <label class="coverage-option">
+                  <input type="radio" name="coverage" value="90" />
+                  <div class="coverage-card">
+                    <div class="coverage-percent">90%</div>
+                    <div class="coverage-desc">Premium Reliability</div>
+                    <div class="coverage-details">
+                      Year-round power<br />
+                      Maximum confidence
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Kit Size -->
+          <div class="form-section">
+            <div class="section-number">3</div>
+            <div class="section-content">
+              <label class="section-label"
+                >What kit size are you considering?</label
+              >
+              <p class="section-help">
+                This is the wattage you see advertised (like 100W, 300W, etc.)
+              </p>
+
+              <div class="kit-size-grid">
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="10" />
+                  <div class="kit-card">
+                    <div class="kit-watts">10W</div>
+                    <div class="kit-desc">SL1210 Pico System</div>
+                    <div class="kit-specs">
+                      4 LED lights • Phone charging • Radio
+                    </div>
+                  </div>
+                </label>
+
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="20" />
+                  <div class="kit-card">
+                    <div class="kit-watts">20W</div>
+                    <div class="kit-desc">SSLS-V1.3 Pico System</div>
+                    <div class="kit-specs">
+                      4 LED lights • Phone • Radio • 65Wh/day
+                    </div>
+                  </div>
+                </label>
+
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="30" />
+                  <div class="kit-card">
+                    <div class="kit-watts">30W</div>
+                    <div class="kit-desc">Mini Kit</div>
+                  </div>
+                </label>
+
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="50" />
+                  <div class="kit-card">
+                    <div class="kit-watts">50W</div>
+                    <div class="kit-desc">SR16 Solar Home System</div>
+                    <div class="kit-specs">
+                      4 lights • TV • Fan • Radio • 180Wh/day
+                    </div>
+                  </div>
+                </label>
+
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="70" />
+                  <div class="kit-card">
+                    <div class="kit-watts">70W</div>
+                    <div class="kit-desc">Medium System</div>
+                  </div>
+                </label>
+
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="100" />
+                  <div class="kit-card">
+                    <div class="kit-watts">100W</div>
+                    <div class="kit-desc">SHS-100 Home System</div>
+                    <div class="kit-specs">
+                      6 lights • TV • Fan • Laptop • 350Wh/day
+                    </div>
+                  </div>
+                </label>
+
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="200" />
+                  <div class="kit-card">
+                    <div class="kit-watts">200W</div>
+                    <div class="kit-desc">SHS-200 Full System</div>
+                    <div class="kit-specs">
+                      8 lights • TV • Fan • AC outlet • 700Wh/day
+                    </div>
+                  </div>
+                </label>
+
+                <label class="kit-size-option">
+                  <input type="radio" name="kitSize" value="0" />
+                  <div class="kit-card calculate-card">
+                    <div class="kit-watts">🤔</div>
+                    <div class="kit-desc">Calculate for Me</div>
+                    <div class="kit-specs">
+                      I'll tell you the minimum size you need
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Appliances -->
+          <div class="form-section">
+            <div class="section-number">4</div>
+            <div class="section-content">
+              <label class="section-label">What will you power?</label>
+              <p class="section-help">
+                Select the appliances you plan to use daily
+              </p>
+
+              <div class="appliances-grid">
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="led_bulb"
+                    data-qty-input="qty_led_bulb"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">💡</span>
+                    <span class="appliance-name">Household LED Bulb (10W)</span>
+                    <input
+                      type="number"
+                      id="qty_led_bulb"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="kit_light"
+                    data-qty-input="qty_kit_light"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">💡</span>
+                    <span class="appliance-name"
+                      >Pico Kit Light Point (2W)</span
+                    >
+                    <input
+                      type="number"
+                      id="qty_kit_light"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="phone_charger"
+                    data-qty-input="qty_phone"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">📱</span>
+                    <span class="appliance-name">Phone Charging</span>
+                    <input
+                      type="number"
+                      id="qty_phone"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="small_tv"
+                    data-qty-input="qty_tv"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">📺</span>
+                    <span class="appliance-name">Small TV</span>
+                    <input
+                      type="number"
+                      id="qty_tv"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="fan"
+                    data-qty-input="qty_fan"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">🌀</span>
+                    <span class="appliance-name">Fan</span>
+                    <input
+                      type="number"
+                      id="qty_fan"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="radio"
+                    data-qty-input="qty_radio"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">📻</span>
+                    <span class="appliance-name">Radio</span>
+                    <input
+                      type="number"
+                      id="qty_radio"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="laptop"
+                    data-qty-input="qty_laptop"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">💻</span>
+                    <span class="appliance-name">Laptop</span>
+                    <input
+                      type="number"
+                      id="qty_laptop"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="wifi_router"
+                    data-qty-input="qty_router"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">📡</span>
+                    <span class="appliance-name">WiFi Router</span>
+                    <input
+                      type="number"
+                      id="qty_router"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+
+                <label class="appliance-option">
+                  <input
+                    type="checkbox"
+                    name="appliance"
+                    value="decoder"
+                    data-qty-input="qty_decoder"
+                  />
+                  <div class="appliance-card">
+                    <span class="appliance-icon">📦</span>
+                    <span class="appliance-name">TV Decoder</span>
+                    <input
+                      type="number"
+                      id="qty_decoder"
+                      class="qty-input"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="submitBtn">
+              Get My Prescription
+            </button>
+          </div>
+        </form>
+
+        <div id="loadingSpinner" class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Analyzing solar data for your location...</p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="info-section">
+        <h3>Why Location Matters</h3>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-icon">🌍</div>
+            <h4>Different Sun, Different Results</h4>
+            <p>
+              A 300W kit in Nairobi produces 40% more power than the same kit in
+              London. Location is everything.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">⚠️</div>
+            <h4>Stop Buying Blind</h4>
+            <p>
+              Solar kits are marketed globally with no location warnings. That
+              ends here.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">💊</div>
+            <h4>The Prescription Model</h4>
+            <p>
+              Just like a doctor prescribes medicine based on YOUR condition, we
+              recommend kits based on YOUR location.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p>
+          Solar Prescription Initiative - Helping consumers make informed solar
+          decisions
+        </p>
+        <p class="footer-note">
+          Data powered by NREL PVWatts • Built for transparency and consumer
+          protection
+        </p>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>

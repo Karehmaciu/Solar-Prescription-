@@ -1,0 +1,53 @@
+<!-- This is YOUR existing single product -->
+{% if prescription.product_info %}
+<div class="detail-card product-card">
+    <h3>📦 Product: {{ prescription.product_info.model }}</h3>
+    ...
+</div>
+{% endif %}
+
+<!-- This is MY new section with MULTIPLE products -->
+{% if prescription.matching_products %}
+<div class="certified-products-section">
+    <h3>✓ VeraSol Certified Products for Your Location</h3>
+    <div class="products-grid">
+        {% for product in prescription.matching_products[:6] %}
+        ...
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+```
+
+## Key Difference
+
+**Your existing approach:**
+- Shows ONE specific product (hardcoded in products.json)
+- SL1210 for 10W, specific models for other sizes
+- Detailed specs for that ONE product
+
+**My addition:**
+- Shows MULTIPLE products that match their needs
+- Filters 183 VeraSol products by coverage in their location
+- Shows 6 best matches with coverage percentages
+
+## How They Work Together
+
+**Example flow for 10W kit:**
+
+1. **Your product_info card shows:**
+```
+   📦 Product: SL1210
+   Brand: Shenzhen FengWo
+   Type: Pico PV System
+   ✓ VeraSol Certified
+   Tested: 35Wh/day
+```
+
+2. **My matching_products shows:**
+```
+   ✓ VeraSol Certified Products for Your Location
+   
+   [Card 1] StarTimes S50C (14W) - Good Match, 95% coverage
+   [Card 2] LEMI Solar Home (10W) - Adequate, 87% coverage  
+   [Card 3] Zimpertec PS-114 (9.3W) - Marginal, 78% coverage
