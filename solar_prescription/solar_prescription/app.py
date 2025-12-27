@@ -10,16 +10,27 @@ import pandas as pd
 import re
 
 env_path = os.path.join(os.path.dirname(__file__), ".env")
-load_dotenv(dotenv_path=env_path)
+if os.path.exists(env_path):
+    load_dotenv(dotenv_path=env_path)
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 
 # Debug: print status at startup (but not the actual keys)
-print(f"Loaded .env from: {env_path}")
+if os.path.exists(env_path):
+    print(f"Loaded .env from: {env_path}")
 print(f"Weather API key loaded: {bool(WEATHER_API_KEY)}")
 print(f"NREL API key loaded: {bool(os.getenv('NREL_API_KEY'))}")
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(16)
+app.secret_key = os.getenv("SECRET_KEY") or secrets.token_hex(16)
+
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+)
+
+# When hosted on Render, the app is served behind HTTPS.
+if os.getenv("RENDER"):
+    app.config.update(SESSION_COOKIE_SECURE=True)
 
 
 def _extract_recommended_watts(prescription: dict) -> int | None:

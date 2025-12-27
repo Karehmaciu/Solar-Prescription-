@@ -1,0 +1,7 @@
+# Render (production) requirements
+# This repo's application code lives under solar_prescription/solar_prescription.
+
+-r solar_prescription/solar_prescription/requirements.txt
+
+# Production WSGI server (cross-platform; works on Render Linux and Windows dev)
+waitress==3.0.0

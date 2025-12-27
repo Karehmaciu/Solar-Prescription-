@@ -12,6 +12,3 @@ charset-normalizer==3.4.0
 idna==3.10
 urllib3==2.2.3
 pandas==2.2.2
-
-# UI smoke tests
-playwright==1.50.0
