@@ -6,7 +6,7 @@ from pvwatts import get_pvwatts_data
 import secrets
 from dotenv import load_dotenv
 import requests
-import pandas as pd
+import csv
 import re
 
 env_path = os.path.join(os.path.dirname(__file__), ".env")
@@ -366,13 +366,20 @@ def products():
         csv_path = os.path.join(
             os.path.dirname(__file__), "data", "all_solar_kits_combined.csv"
         )
-        df = pd.read_csv(csv_path)
 
-        # Filter by wattage
-        filtered = df[df["PV Module Maximum Power [W]"] == watts]
-
-        # Convert to list of dicts
-        products_list = filtered.to_dict("records")
+        products_list: list[dict] = []
+        with open(csv_path, "r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                raw_power = row.get("PV Module Maximum Power [W]")
+                if raw_power is None:
+                    continue
+                try:
+                    power = int(float(str(raw_power).strip()))
+                except (TypeError, ValueError):
+                    continue
+                if power == watts:
+                    products_list.append(row)
 
         return render_template("products.html", products=products_list, watts=watts)
     except Exception as e:
