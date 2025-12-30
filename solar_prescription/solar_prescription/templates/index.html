@@ -15,16 +15,27 @@
     <div class="hero-section">
       <div class="container">
         <div class="hero-content">
-          <h1 class="hero-title">
-            <span class="emoji">☀️</span>
-            Solar Prescription
-          </h1>
+          <div class="logo-container">
+            <img
+              src="{{ url_for('static', filename='images/logo.png') }}"
+              alt="Solar Prescription Logo"
+              class="app-logo"
+            />
+          </div>
+          <h1 class="hero-title">Solar Prescription</h1>
           <p class="hero-subtitle">
             Just like medicine, solar kits should be prescribed based on where
             you live.
             <br />Get the right kit for your location - not a one-size-fits-all
             solution.
           </p>
+          <div class="hero-image-container">
+            <img
+              src="{{ url_for('static', filename='images/hero.png') }}"
+              alt="Solar Prescription Hero"
+              class="hero-image"
+            />
+          </div>
         </div>
       </div>
     </div>
